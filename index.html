@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
 
+  <!-- MOBILE & APP BEHAVIOR -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 
   <!-- SITE NAME & SEO -->
@@ -10,7 +11,7 @@
   <meta name="description"
         content="Pixel Paint is a free online drawing and pixel art tool. Draw, paint, undo, redo, and download your artwork directly in the browser.">
 
-  <!-- CANONICAL (update with your live URL) -->
+  <!-- CANONICAL -->
   <link rel="canonical" href="https://surya0604005.github.io/pixel-paint/">
 
   <!-- FAVICON -->
@@ -27,12 +28,12 @@
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "Pixel Paint",
-    "description": "A lightweight online drawing and pixel art tool that runs fully in the browser.",
-    "url": "https://surya0604005.github.io/pixel-paint/"
+    "url": "https://surya0604005.github.io/pixel-paint/",
+    "description": "A lightweight online drawing and pixel art tool that runs fully in the browser."
   }
   </script>
 
-  <!-- STRUCTURED DATA : WEB APP -->
+  <!-- STRUCTURED DATA : SOFTWARE APP -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -49,30 +50,34 @@
   }
   </script>
 
+  <!-- STYLES -->
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <h1>🎨 Pixel Paint</h1>
+  <header>
+    <h1>🎨 Pixel Paint</h1>
+  </header>
 
-  <div class="controls">
-    <input type="color" id="colorPicker" value="#000000">
+<div class="controls">
+  <input type="color" id="colorPicker" value="#000000" aria-label="Color picker">
 
-    <div class="slider">
-      <label for="brushSize">🖌️</label>
-      <input type="range" id="brushSize" min="1" max="50" value="10">
-    </div>
-
-    <button id="undoBtn">Undo</button>
-    <button id="redoBtn">Redo</button>
-    <button id="clearBtn">Clear</button>
-    <button id="downloadBtn">Download</button>
+  <div class="slider">
+    <label for="brushSize" aria-label="Brush size">🖌️</label>
+    <input type="range" id="brushSize" min="1" max="50" value="10">
   </div>
 
-  <canvas id="paintCanvas"></canvas>
+  <button id="undoBtn" type="button">Undo</button>
+  <button id="redoBtn" type="button">Redo</button>
+  <button id="clearBtn" type="button">Clear</button>
+  <button id="eraserBtn" type="button">Eraser</button>
+  <button id="downloadBtn" type="button">Download</button>
+</div>
+
+
+  <canvas id="paintCanvas" aria-label="Drawing canvas"></canvas>
 
   <script src="script.js"></script>
 </body>
 </html>
-
