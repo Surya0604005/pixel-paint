@@ -1,4 +1,4 @@
-const CACHE_NAME = "pixel-paint-v1";
+const CACHE_NAME = "pixel-paint-v3";
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
@@ -18,3 +18,4 @@ self.addEventListener("fetch", (e) => {
     caches.match(e.request).then(response => response || fetch(e.request))
   );
 });
+
