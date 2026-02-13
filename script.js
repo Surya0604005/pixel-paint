@@ -4,136 +4,185 @@ const ctx = canvas.getContext("2d");
 const colorPicker = document.getElementById("colorPicker");
 const brushSize = document.getElementById("brushSize");
 
+const undoBtn = document.getElementById("undoBtn");
+const redoBtn = document.getElementById("redoBtn");
+const clearBtn = document.getElementById("clearBtn");
+const downloadBtn = document.getElementById("downloadBtn");
+const eraserBtn = document.getElementById("eraserBtn");
+
+let erasing = false;
 let painting = false;
 let undoStack = [];
 let redoStack = [];
+let lastX = 0;
+let lastY = 0;
 
-// Resize canvas safely
+/* =========================
+   RESIZE CANVAS (SAFE)
+========================= */
 function resizeCanvas() {
-  const imageData = canvas.toDataURL();
+  const snapshot = canvas.toDataURL();
 
   canvas.width = window.innerWidth;
   canvas.height =
     window.innerHeight -
     document.querySelector(".controls").offsetHeight -
-    document.querySelector("h1").offsetHeight -
+    document.querySelector("header").offsetHeight -
     20;
 
-  ctx.fillStyle = "white";
+  ctx.fillStyle = "#ffffff";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   const img = new Image();
-  img.src = imageData;
+  img.src = snapshot;
   img.onload = () => ctx.drawImage(img, 0, 0);
 }
 
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
-// Start drawing
+/* =========================
+   DRAWING LOGIC
+========================= */
+function getPosition(e) {
+  const rect = canvas.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+  return {
+    x: clientX - rect.left,
+    y: clientY - rect.top
+  };
+}
+
 function startPosition(e) {
   painting = true;
   saveState();
 
-  const rect = canvas.getBoundingClientRect();
-  const x = (e.clientX || e.touches[0].clientX) - rect.left;
-  const y = (e.clientY || e.touches[0].clientY) - rect.top;
+  const pos = getPosition(e);
+  lastX = pos.x;
+  lastY = pos.y;
 
   ctx.beginPath();
-  ctx.moveTo(x, y);
+  ctx.moveTo(lastX, lastY);
 }
 
-// Stop drawing
 function endPosition() {
   painting = false;
   ctx.beginPath();
 }
 
-// Draw
 function draw(e) {
   if (!painting) return;
 
-  const rect = canvas.getBoundingClientRect();
-  const x = (e.clientX || e.touches[0].clientX) - rect.left;
-  const y = (e.clientY || e.touches[0].clientY) - rect.top;
+  const pos = getPosition(e);
 
   ctx.lineWidth = brushSize.value;
   ctx.lineCap = "round";
-  ctx.strokeStyle = colorPicker.value;
+  ctx.lineJoin = "round";
+  ctx.strokeStyle = erasing ? "rgba(0,0,0,1)" : colorPicker.value;
 
-  ctx.lineTo(x, y);
+
+  ctx.lineTo(pos.x, pos.y);
   ctx.stroke();
   ctx.beginPath();
-  ctx.moveTo(x, y);
+  ctx.moveTo(pos.x, pos.y);
 }
 
-// Save state
+/* =========================
+   UNDO / REDO (OPTIMIZED)
+========================= */
 function saveState() {
-  undoStack.push(canvas.toDataURL());
-  if (undoStack.length > 50) undoStack.shift();
+  const data = canvas.toDataURL("image/png", 0.6);
+
+  if (undoStack[undoStack.length - 1] === data) return;
+
+  undoStack.push(data);
+  if (undoStack.length > 30) undoStack.shift();
   redoStack = [];
 }
 
-// Undo
-document.getElementById("undoBtn").onclick = () => {
+undoBtn.onclick = () => {
   if (!undoStack.length) return;
+
   redoStack.push(canvas.toDataURL());
-
-  const img = new Image();
-  img.src = undoStack.pop();
-  img.onload = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, 0, 0);
-  };
+  restoreCanvas(undoStack.pop());
 };
 
-// Redo
-document.getElementById("redoBtn").onclick = () => {
+redoBtn.onclick = () => {
   if (!redoStack.length) return;
-  undoStack.push(canvas.toDataURL());
 
+  undoStack.push(canvas.toDataURL());
+  restoreCanvas(redoStack.pop());
+};
+
+function restoreCanvas(data) {
   const img = new Image();
-  img.src = redoStack.pop();
+  img.src = data;
   img.onload = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(img, 0, 0);
   };
-};
+}
 
-// Clear
-document.getElementById("clearBtn").onclick = () => {
+/* =========================
+   CLEAR (CONFIRM UX)
+========================= */
+clearBtn.onclick = () => {
+  if (!confirm("Clear the canvas?")) return;
+
   saveState();
-  ctx.fillStyle = "white";
+  ctx.fillStyle = "#ffffff";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 };
 
-// Download
-document.getElementById("downloadBtn").onclick = () => {
+/* =========================
+   DOWNLOAD + FEEDBACK
+========================= */
+downloadBtn.onclick = () => {
   const link = document.createElement("a");
   link.download = "pixel_paint.png";
-  link.href = canvas.toDataURL();
+  link.href = canvas.toDataURL("image/png");
   link.click();
 };
 
-// Mouse events
+/* =========================
+   EVENTS
+========================= */
 canvas.addEventListener("mousedown", startPosition);
 canvas.addEventListener("mouseup", endPosition);
+canvas.addEventListener("mouseleave", endPosition);
 canvas.addEventListener("mousemove", draw);
 
-// Touch events
 canvas.addEventListener("touchstart", e => {
   e.preventDefault();
   startPosition(e);
 });
 canvas.addEventListener("touchend", endPosition);
+canvas.addEventListener("touchcancel", endPosition);
 canvas.addEventListener("touchmove", e => {
   e.preventDefault();
   draw(e);
 });
 
-//Register Service Worker
+/* =========================
+   SERVICE WORKER
+========================= */
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./service-worker.js");
   });
 }
+
+/* =========================
+   earser logic
+========================= */
+eraserBtn.onclick = () => {
+  erasing = !erasing;
+
+  ctx.globalCompositeOperation = erasing
+    ? "destination-out"
+    : "source-over";
+
+  eraserBtn.classList.toggle("active", erasing);
+};
