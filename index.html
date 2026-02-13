@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <!-- SITE NAME + SEO -->
+  <title>Pixel Paint – Online Drawing & Pixel Art Tool</title>
+  <meta name="description"
+        content="Pixel Paint is a free online drawing and pixel art tool. Draw, paint, undo, redo, and download your artwork directly in the browser.">
+
+  <!-- CANONICAL (use your real live URL here) -->
+  <link rel="canonical" href="https://yourusername.github.io/pixel-paint/">
+
+  <!-- STRUCTURED DATA : WEBSITE -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Pixel Paint",
+    "description": "A lightweight online drawing and pixel art tool that runs fully in the browser.",
+    "url": "https://yourusername.github.io/pixel-paint/"
+  }
+  </script>
+
+  <!-- STRUCTURED DATA : WEB APP -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Pixel Paint",
+    "applicationCategory": "DesignApplication",
+    "operatingSystem": "Web",
+    "description": "Browser-based drawing and pixel art application with undo, redo, and download support.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <h1>🎨 Pixel Paint</h1>
+
+  <div class="controls">
+    <input type="color" id="colorPicker" value="#000000">
+
+    <div class="slider">
+      <label for="brushSize">🖌️</label>
+      <input type="range" id="brushSize" min="1" max="50" value="10">
+    </div>
+
+    <button id="undoBtn">Undo</button>
+    <button id="redoBtn">Redo</button>
+    <button id="clearBtn">Clear</button>
+    <button id="downloadBtn">Download</button>
+  </div>
+
+  <canvas id="paintCanvas"></canvas>
+
+  <script src="script.js"></script>
+</body>
+</html>

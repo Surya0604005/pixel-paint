@@ -1,0 +1,118 @@
+body {
+  font-family: sans-serif;
+  margin: 0;
+  background: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  text-align: center;
+}
+
+h1 {
+  margin: 10px 0;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#colorPicker {
+  width: 35px;
+  height: 35px;
+  border: none;
+  cursor: pointer;
+}
+
+#colorPicker::-webkit-color-swatch,
+#colorPicker::-moz-color-swatch {
+  border: none;
+  border-radius: 6px;
+}
+
+button {
+  padding: 8px 15px;
+  border: none;
+  background: #333;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #555;
+}
+
+.slider {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+canvas {
+  flex: 1;
+  background: white;
+  cursor: crosshair;
+}
+
+/* ===== INFO PAGES (About / Privacy / Contact) ===== */
+
+.info-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  padding: 20px;
+}
+
+.info-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  max-width: 600px;
+  width: 100%;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  text-align: left;
+}
+
+.info-card h1 {
+  background-size: 200% auto;
+  animation: gradientMove 4s ease infinite;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+
+.info-card p {
+  line-height: 1.7;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.info-card a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.info-card a:hover {
+  text-decoration: underline;
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #555;
+}
