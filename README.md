@@ -39,7 +39,7 @@ Designed for creativity, learning, and experimentation — no installation requi
 
 ## ⚙️ How to Run Locally
 ```bash
-git clone https://github.com/your-username/pixel-paint.git
+git clone https://github.com/surya0604005/pixel-paint.git
 cd pixel-paint
 open index.html
 ```
