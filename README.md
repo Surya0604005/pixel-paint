@@ -79,6 +79,7 @@ open index.html
 - 🔗 GitHub: [https://github.com/Surya0604005](https://github.com/Surya0604005)
 - 🔗 LinkedIn: [https://www.linkedin.com/in/surya-teja-katta-816614300](https://www.linkedin.com/in/surya-teja-katta-816614300)
 
+
 ##📄 License
 
 This project is open-source and free to use for learning, personal, and portfolio purposes.
